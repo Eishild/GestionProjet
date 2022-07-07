@@ -9,12 +9,13 @@ const Note = ({ navigation, route }) => {
   const [title, setTitle] = useState("Title")
   const [note, setNote] = useState("Note...")
 
-  useEffect(() => {}, [])
   useFocusEffect(
     React.useCallback(() => {
-      if (route?.params?._id) {
+      if (route?.params?.item?._id) {
         axios
-          .get(`http://192.168.108.223:3002/task/Add_task/${route.params._id}`)
+          .get(
+            `http://192.168.108.223:3002/task/Add_task/${route.params.item._id}`
+          )
           .then((response) => {
             setTitle(response.data.title)
             setNote(response.data.items[0])
@@ -25,23 +26,33 @@ const Note = ({ navigation, route }) => {
   )
 
   const handleValidateNote = (item) => {
-    if (!item._id) {
+    if (!item?.item) {
       axios
         .post(`http://192.168.108.223:3002/task/Add_task`, {
           title: title,
           items: note,
           taskType: route.params.taskType,
         })
-        .then((response) => navigation.navigate("Task", response.data))
+        .then((response) =>
+          navigation.navigate("Task", {
+            _id: route.params._id,
+            data: response.data,
+          })
+        )
         .catch((err) => console.log(err))
     } else {
       axios
-        .patch(`http://192.168.108.223:3002/task/Add_task/${item._id}`, {
+        .patch(`http://192.168.108.223:3002/task/Add_task/${item.item._id}`, {
           title: title,
           items: note,
           taskType: route.params.taskType,
         })
-        .then((response) => navigation.navigate("Task", response.data))
+        .then((response) =>
+          navigation.navigate("Task", {
+            _id: route.params._id,
+            data: response.data,
+          })
+        )
         .catch((err) => console.log(err))
     }
   }

@@ -41,43 +41,26 @@ const Task = ({ navigation, route }) => {
   const [valideProject, setValideProject] = useState(false)
   const [data, setData] = useState({})
 
-  console.log("route", route.params.taskType)
-  console.log("data", data)
-
-  if (route?.params._id && route.params?.taskType === undefined) {
-    useFocusEffect(
-      React.useCallback(() => {
+  useFocusEffect(
+    React.useCallback(() => {
+      if (route?.params?._id) {
         axios
-          .get(
-            `http://192.168.108.223:3002/project/Home/${
-              Object.keys(data).length === 0 &&
-              route.params.taskType === undefined
-                ? route.params._id
-                : data._id
-            }`
-          )
+          .get(`http://192.168.108.223:3002/project/Home/${route.params._id}`)
           .then((res) => {
-            console.log("data", res.data.tasks)
-            setValideProject(true)
             setTask(res.data.tasks)
+            setValideProject(true)
             setTitle(res.data.title)
             setData(res.data)
             setTaskType("")
           })
-          .catch((err) => console.log("err"))
-      }, [])
-    )
-  }
-
-  useEffect(() => {
-    if (route?.params._id && route.params.taskType === undefined) {
-      setData(route?.params)
-    }
-  }, [])
+          .catch((err) => console.log(err))
+      }
+    }, [])
+  )
 
   // MODIFICATION DE L'ITEM DANS LA BDD POUR CHAQUE CHANGEMENT DE "EDITITEMS" SI SA LONGUEUR EST NON NULL
   useEffect(() => {
-    if (route?.params?.taskType) {
+    if (route?.params?.data?.taskType) {
       setEditItems({ _id: data._id, title, tasks: projectId })
     }
   }, [projectId])
@@ -86,7 +69,7 @@ const Task = ({ navigation, route }) => {
     if (Object.keys(editItems).length !== 0) {
       axios
         .patch(
-          `http://192.168.108.223:3002/project/Add_projects/${editItems?._id}`,
+          `http://192.168.108.223:3002/project/Add_projects/${route.params?._id}`,
           editItems
         )
         .catch((e) => console.log(e))
@@ -121,7 +104,7 @@ const Task = ({ navigation, route }) => {
   const handleDeleteTask = (item, index) => {
     axios
       .delete(`http://192.168.108.223:3002/task/Add_task/${item._id}`)
-      .then((response) => {
+      .then(() => {
         let taskCopy = [...task]
         taskCopy.splice(index, 1)
         setTask(taskCopy)
@@ -131,10 +114,13 @@ const Task = ({ navigation, route }) => {
   const handleSubmitEditting = () => {
     setInputTitle(false)
   }
-
   useEffect(() => {
-    if (route?.params?.taskType) {
-      setProjectId([...projectId, route.params._id])
+    if (route?.params?.data?._id) {
+      console.log("id", route.params.data._id)
+      const filterId = projectId.filter((el) => el === route?.params?.data?._id)
+      if (filterId.length === 0) {
+        setProjectId([...projectId, route.params.data._id])
+      }
     }
   }, [route?.params])
 
@@ -144,13 +130,15 @@ const Task = ({ navigation, route }) => {
   }
   useEffect(() => {
     if (taskType !== "") {
-      navigation.navigate(taskType, { taskType, data })
+      navigation.navigate(taskType, { _id: data._id, taskType: taskType })
     }
   }, [taskType])
 
   const handleNavigateToTask = (item) => {
     console.log(item)
-    navigation.navigate(item.taskType, item)
+    if (item?.taskType) {
+      navigation.navigate(item.taskType, { item: item, _id: data._id })
+    }
   }
 
   const handleModal = () => {

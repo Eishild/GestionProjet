@@ -5,7 +5,6 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  TouchableOpacity,
   View,
 } from "react-native"
 import React, { useEffect, useState } from "react"
@@ -22,25 +21,14 @@ const TodoList = ({ navigation, route }) => {
   const [selectedIndex, setSelectedIndex] = useState(-1)
   const [isEdditing, setIsEdditing] = useState(false)
 
-  // useEffect(() => {
-  //   if (route?.params?._id) {
-  //     axios
-  //       .get(`http://192.168.108.223:3002/task/Add_task/${route.params._id}`)
-  //       .then((response) => {
-  //         console.log(response.data)
-  //         setTitle(response.data.title)
-  //         setTodoItems(response.data.items)
-  //       })
-  //       .catch((err) => console.log(err))
-  //   }
-  // }, [])
   useFocusEffect(
     React.useCallback(() => {
-      if (route?.params?._id) {
+      if (route?.params?.item?._id) {
         axios
-          .get(`http://192.168.108.223:3002/task/Add_task/${route.params._id}`)
+          .get(
+            `http://192.168.108.223:3002/task/Add_task/${route.params.item._id}`
+          )
           .then((response) => {
-            // console.log("data", response.data)
             setTitle(response.data.title)
             setTodoItems(response.data.items)
           })
@@ -49,23 +37,33 @@ const TodoList = ({ navigation, route }) => {
     }, [])
   )
   const handleValidateTodos = (item) => {
-    if (!item._id) {
+    if (!item?.item) {
       axios
         .post(`http://192.168.108.223:3002/task/Add_task`, {
           title: title,
           items: todoItems,
           taskType: route.params.taskType,
         })
-        .then((response) => navigation.navigate("Task", response.data))
+        .then((response) => {
+          navigation.navigate("Task", {
+            _id: route.params._id,
+            data: response.data,
+          })
+        })
         .catch((err) => console.log(err))
     } else {
       axios
-        .patch(`http://192.168.108.223:3002/task/Add_task/${item._id}`, {
+        .patch(`http://192.168.108.223:3002/task/Add_task/${item.item._id}`, {
           title: title,
           items: todoItems,
           taskType: route.params.taskType,
         })
-        .then((response) => navigation.navigate("Task", response.data))
+        .then((response) =>
+          navigation.navigate("Task", {
+            _id: route.params._id,
+            data: response.data,
+          })
+        )
         .catch((err) => console.log(err))
     }
   }
