@@ -2,7 +2,7 @@ import { Pressable, StyleSheet, Text, TextInput, View } from "react-native"
 import React, { useState } from "react"
 import axios from "axios"
 
-const Register = () => {
+const Register = ({ navigation, route }) => {
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
   const [email, setEmail] = useState("")
@@ -18,9 +18,16 @@ const Register = () => {
         password,
       })
       .then((response) => {
-        setRegisterError(response.data.message)
+        console.log(response.data)
+        if (response.data.success) {
+          navigation.navigate("Login")
+        } else {
+          setRegisterError(response.data.message)
+        }
       })
-      .catch((err) => console.log(err))
+      .catch((err) => {
+        console.log(err)
+      })
   }
   return (
     <View style={styles.registernPage}>
@@ -52,11 +59,17 @@ const Register = () => {
         secureTextEntry={true}
       />
 
-      <Text>{registerError}</Text>
+      <Text style={styles.textError}>{registerError}</Text>
 
       <Pressable style={styles.SubmitButton} onPress={handleAddUser}>
         <Text>Inscription</Text>
       </Pressable>
+      <Text
+        onPress={() => navigation.navigate("Login")}
+        style={styles.navigation}
+      >
+        Déjà un compte ?
+      </Text>
     </View>
   )
 }
@@ -68,6 +81,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#2D2D2D",
   },
   input: {
     backgroundColor: "grey",
@@ -83,5 +97,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#f1f1f1",
     justifyContent: "center",
     alignItems: "center",
+  },
+  textError: {
+    color: "white",
+  },
+  navigation: {
+    color: "white",
   },
 })

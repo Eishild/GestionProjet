@@ -111,12 +111,8 @@ const Task = ({ navigation, route }) => {
       })
   }
 
-  const handleSubmitEditting = () => {
-    setInputTitle(false)
-  }
   useEffect(() => {
     if (route?.params?.data?._id) {
-      console.log("id", route.params.data._id)
       const filterId = projectId.filter((el) => el === route?.params?.data?._id)
       if (filterId.length === 0) {
         setProjectId([...projectId, route.params.data._id])
@@ -135,7 +131,6 @@ const Task = ({ navigation, route }) => {
   }, [taskType])
 
   const handleNavigateToTask = (item) => {
-    console.log(item)
     if (item?.taskType) {
       navigation.navigate(item.taskType, { item: item, _id: data._id })
     }
@@ -162,8 +157,8 @@ const Task = ({ navigation, route }) => {
             autoFocus
             value={title}
             onChangeText={(text) => setTitle(text)}
-            onSubmitEditing={handleSubmitEditting}
-            onBlur={handleSubmitEditting}
+            onSubmitEditing={() => setInputTitle(false)}
+            onBlur={() => setInputTitle(false)}
           />
         </KeyboardAvoidingView>
       ) : (

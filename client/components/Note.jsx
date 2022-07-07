@@ -1,13 +1,24 @@
-import { View, Text, StyleSheet, TextInput, Keyboard } from "react-native"
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  Keyboard,
+  Pressable,
+  KeyboardAvoidingView,
+} from "react-native"
 import React, { useEffect, useState } from "react"
-import Icon from "react-native-vector-icons/AntDesign"
+import AntIcon from "react-native-vector-icons/AntDesign"
 import axios from "axios"
 import { useFocusEffect } from "@react-navigation/native"
-const checkIcon = <Icon name="check" size={30} color="#DBDBDB" />
+const checkIcon = <AntIcon name="check" size={30} color="#DBDBDB" />
+const backIcon = <AntIcon name="arrowleft" size={30} color="#DBDBDB" />
 
 const Note = ({ navigation, route }) => {
   const [title, setTitle] = useState("Title")
   const [note, setNote] = useState("Note...")
+  const [isTitleEdditing, setIsTitleEdditing] = useState(false)
+  const [isNoteEdditing, setIsNoteEdditing] = useState(false)
 
   useFocusEffect(
     React.useCallback(() => {
@@ -67,23 +78,49 @@ const Note = ({ navigation, route }) => {
   return (
     <View style={styles.template}>
       <Text style={styles.templateTitle}>Note</Text>
-      <View style={styles.addProjectValidation}>
+      <View style={styles.addNoteValidation}>
+        <Text onPress={() => navigation.goBack()}>{backIcon}</Text>
+
         <Text onPress={() => handleValidateNote(route?.params)}>
           {checkIcon}
         </Text>
       </View>
-      <TextInput
-        style={styles.inputTitle}
-        placeholder={"Entrez un titre"}
-        value={title}
-        onChangeText={(text) => setTitle(text)}
-      />
-      <TextInput
-        style={styles.inputNote}
-        multiline={true}
-        value={note}
-        onChangeText={(note) => setNote(note)}
-      />
+      {isTitleEdditing ? (
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
+          <TextInput
+            style={styles.inputTitle}
+            placeholder={"Entrez un titre"}
+            autoFocus={true}
+            value={title}
+            onChangeText={(text) => setTitle(text)}
+            onSubmitEditing={() => setIsTitleEdditing(false)}
+          />
+        </KeyboardAvoidingView>
+      ) : (
+        <Pressable onPress={() => setIsTitleEdditing(true)}>
+          <Text style={styles.inputTitle}>{title}</Text>
+        </Pressable>
+      )}
+      {isNoteEdditing ? (
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
+          <TextInput
+            style={styles.inputNote}
+            multiline={true}
+            autoFocus={true}
+            value={note}
+            onChangeText={(note) => setNote(note)}
+            onSubmitEditing={() => setIsNoteEdditing(true)}
+          />
+        </KeyboardAvoidingView>
+      ) : (
+        <Pressable onPress={() => setIsNoteEdditing(true)}>
+          <Text style={styles.inputNote}>{note}</Text>
+        </Pressable>
+      )}
     </View>
   )
 }
@@ -94,9 +131,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     backgroundColor: "#2D2D2D",
   },
-  addProjectValidation: {
+  addNoteValidation: {
     alignItems: "flex-end",
     marginVertical: 12,
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   templateTitle: {
     color: "white",

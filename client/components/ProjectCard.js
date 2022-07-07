@@ -12,7 +12,6 @@ const ProjectCard = ({ item, index, handleDeletCard, handleSelectedCard }) => {
     >
       <View style={styles.cardInfo}>
         <Text style={styles.cardTitle}>{`${item.title}`}</Text>
-        <Text style={styles.cardText}>Info sur le contenu</Text>
       </View>
     </TouchableOpacity>
   )
@@ -27,7 +26,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#525259",
     borderRadius: 20,
     paddingHorizontal: 10,
-    paddingVertical: 10,
+    paddingVertical: 15,
     margin: 5,
   },
   cardTitle: {

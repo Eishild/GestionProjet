@@ -5,7 +5,6 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack"
 
 import Task from "./components/Task"
 import Home from "./components/Home"
-import { useEffect, useState } from "react"
 import TodoList from "./components/TodoList"
 import Note from "./components/Note"
 import Login from "./components/Login"
@@ -14,17 +13,9 @@ import Register from "./components/Register"
 const Stack = createNativeStackNavigator()
 
 export default function App() {
-  const [post, setPost] = useState(null)
-
-  // const { item } = route?.params
-
   return (
     <View style={styles.container}>
-      <StatusBar
-        hidden={false}
-        backgroundColor={"#2D2D2D"}
-        // translucent={true}
-      />
+      <StatusBar hidden={false} backgroundColor={"#2D2D2D"} />
       {/* <Login /> */}
       {/* <Register /> */}
       <NavigationContainer>

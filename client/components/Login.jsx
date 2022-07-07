@@ -1,10 +1,26 @@
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import axios from "axios"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
-const Login = () => {
+const Login = ({ navigation }) => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+
+  const saveToken = async (token) => {
+    try {
+      await AsyncStorage.setItem("token", token)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+  const saveIDUser = async (IDUser) => {
+    try {
+      await AsyncStorage.setItem("IDUser", IDUser)
+    } catch (err) {
+      console.log(err)
+    }
+  }
 
   const handleLogUser = () => {
     axios
@@ -12,9 +28,15 @@ const Login = () => {
         email,
         password,
       })
-      .then((response) => console.log(response.data))
+      .then((response) => {
+        console.log(response.data.idUser)
+        saveToken(response.data.token)
+        saveIDUser(response.data.idUser)
+        navigation.navigate("Home", { idUser: response.data.idUser })
+      })
       .catch((err) => console.log(err))
   }
+
   return (
     <View style={styles.loginPage}>
       <Text>Login</Text>
@@ -24,8 +46,6 @@ const Login = () => {
         placeholder="Email"
         onChangeText={(text) => setEmail(text)}
         style={styles.input}
-        // onSubmitEditing={handleSubmitEditting}
-        // onBlur={handleSubmitEditting}
       />
       <TextInput
         value={password}
@@ -33,13 +53,17 @@ const Login = () => {
         onChangeText={(text) => setPassword(text)}
         style={styles.input}
         secureTextEntry={true}
-        // onSubmitEditing={handleSubmitEditting}
-        // onBlur={handleSubmitEditting}
       />
 
       <Pressable style={styles.SubmitButton} onPress={handleLogUser}>
         <Text>Conexion</Text>
       </Pressable>
+      <Text
+        onPress={() => navigation.navigate("Register")}
+        style={styles.navigation}
+      >
+        Tu veux te créer un compte ?
+      </Text>
     </View>
   )
 }
@@ -51,6 +75,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#2D2D2D",
   },
   input: {
     backgroundColor: "grey",
@@ -66,5 +91,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#f1f1f1",
     justifyContent: "center",
     alignItems: "center",
+  },
+  navigation: {
+    color: "white",
   },
 })
