@@ -1,0 +1,36 @@
+[{
+  "_id": {
+    "$oid": "62c74d2e461d38d36db2f44d"
+  },
+  "title": "Projet 1",
+  "tasks": [
+    {
+      "$oid": "62c7527e461d38d36db2f473"
+    },
+    {
+      "$oid": "62c752b6461d38d36db2f47e"
+    }
+  ],
+  "date_start": {
+    "$date": {
+      "$numberLong": "1657228590551"
+    }
+  },
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "62c751f5461d38d36db2f469"
+  },
+  "title": "Projet 2",
+  "tasks": [
+    {
+      "$oid": "62c752f5461d38d36db2f48c"
+    }
+  ],
+  "date_start": {
+    "$date": {
+      "$numberLong": "1657229813453"
+    }
+  },
+  "__v": 0
+}]

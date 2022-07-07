@@ -1,0 +1,15 @@
+[{
+  "_id": {
+    "$oid": "62c6a35ee5967675d12ebbc0"
+  },
+  "firstName": "Jimmy",
+  "lastName": "Huet",
+  "email": "jimmy.huet@gmail.com",
+  "password": "$2b$10$16eTa7XO5xETMowYSLrlru/CMPrJm4tKpJxEL6seLEob/Fk6FA/Hi",
+  "date_start": {
+    "$date": {
+      "$numberLong": "1657185118290"
+    }
+  },
+  "__v": 0
+}]

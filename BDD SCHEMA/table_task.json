@@ -1,0 +1,39 @@
+[{
+  "_id": {
+    "$oid": "62c7527e461d38d36db2f473"
+  },
+  "title": "Todo Projet 1",
+  "taskType": "Todolist",
+  "items": [
+    {
+      "items": "Ajouter une todo"
+    },
+    {
+      "items": "Delete la todo"
+    },
+    {
+      "items": "Update la todo"
+    }
+  ],
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "62c752b6461d38d36db2f47e"
+  },
+  "title": "Note Projet 1",
+  "taskType": "Note",
+  "items": [
+    "Ceci est une note"
+  ],
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "62c752f5461d38d36db2f48c"
+  },
+  "title": "Note projet 2",
+  "taskType": "Note",
+  "items": [
+    "Note du projet 2"
+  ],
+  "__v": 0
+}]
